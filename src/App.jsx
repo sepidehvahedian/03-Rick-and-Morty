@@ -11,37 +11,45 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null);
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       setIsLoading(true);
+  //       const res = await fetch("https://rickandmortyapi.com/api/character");
+  //       if (!res.ok) throw new Error("Something went wrong!");
+  //       const data = await res.json();
+  //       setCharacters(data.results);
+  //       // setIsLoading(false);
+  //     } catch (err) {
+  //       // setIsLoading(false);
+  //       // console.log(err.message);
+  //       toast.error(err.message);
+  //       // setError(err.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const res = await fetch("https://rickandmortyapi.com/api/characternn");
-        if (!res.ok) throw new Error("Something went wrong!");
-        const data = await res.json();
+    setIsLoading(true);
+    fetch("https://rickandmortyapi.com/api/character")
+      .then((res) => {
+        if (!res.ok) throw new Error("Something went wrong !!");
+        return res.json();
+      })
+      .then((data) => {
         setCharacters(data.results);
         // setIsLoading(false);
-      } catch (err) {
+      })
+      .catch((err) => {
         // setIsLoading(false);
-        // console.log(err.message);
         toast.error(err.message);
-        // setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchData();
+      })
+      .finally(() => setIsLoading(false));
   }, []);
-
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   fetch("https://rickandmortyapi.com/api/character")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setCharacters(data.results.slice(0, 5));
-  //       setIsLoading(false);
-  //     });
-  // }, []);
-  console.log(error);
+  // console.log(error);
   return (
     <div className="app">
       <Toaster />
