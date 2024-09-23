@@ -2,43 +2,55 @@ import "./App.css";
 import CharacterList from "./components/CharacterList";
 import CharacterDetail from "./components/CharacterDetail";
 import Navbar, { SearchResult } from "./components/Navbar";
-import { allCharacters } from "../data/data";
 import React, { useEffect, useState } from "react";
 import Loader from "./components/loader";
 
 function App() {
-  const [characters, setCharacters] = useState(allCharacters);
+  const [characters, setCharacters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
-      setIsLoading(true);
-      const res = await fetch("https://rickandmortyapi.com/api/character");
-      const data = await res.json();
-      setCharacters(data.results);
-      setIsLoading(false);
+      try {
+        setIsLoading(true);
+        const res = await fetch("https://rickandmortyapi.com/api/characternn");
+        if (!res.ok) throw new Error("Something went wrong!");
+        const data = await res.json();
+        setCharacters(data.results);
+        // setIsLoading(false);
+      } catch (err) {
+        // setIsLoading(false);
+        // console.log(err.message);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setIsLoading(true);
-    fetch("https://rickandmortyapi.com/api/character")
-      .then((res) => res.json())
-      .then((data) => {
-        setCharacters(data.results.slice(0, 5));
-        setIsLoading(false);
-      });
-  }, []);
-
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   fetch("https://rickandmortyapi.com/api/character")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setCharacters(data.results.slice(0, 5));
+  //       setIsLoading(false);
+  //     });
+  // }, []);
+  console.log(error);
   return (
     <div className="app">
-      <Loader />
       <Navbar>
         <SearchResult numOfResult={characters.length} />
       </Navbar>
       <Main>
-        <CharacterList characters={characters} isLoading={isLoading} />
+        <CharacterList
+          error={error}
+          characters={characters}
+          isLoading={isLoading}
+        />
         <CharacterDetail />
       </Main>
     </div>
