@@ -12,48 +12,45 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   // const [error, setError] = useState(null);
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       setIsLoading(true);
+  //       const { data } = await axios(
+  //         "https://rickandmortyapi.com/api/character"
+  //       );
+  //       // console.log(res);
+  //       setCharacters(data.results.slice(0, 5));
+  //       // setIsLoading(false);
+  //     } catch (err) {
+  //       console.log(err.response.data.error);
+  //       // for real project get console.log
+  //       // err.response.data.message
+  //       // setIsLoading(false);
+  //       // console.log(err.message);
+  //       toast.error(err.response.data.error);
+  //       // setError(err.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
-    async function fetchData() {
-      try {
-        setIsLoading(true);
-        const { data } = await axios(
-          "https://rickandmortyapi.com/api/character"
-        );
-        // console.log(res);
+    setIsLoading(true);
+    axios
+      .get("https://rickandmortyapi.com/api/character")
+      .then(({ data }) => {
         setCharacters(data.results.slice(0, 5));
         // setIsLoading(false);
-      } catch (err) {
-        console.log(err.response.data.error);
-        // for real project get console.log
-        // err.response.data.message
+      })
+      .catch((err) => {
         // setIsLoading(false);
-        // console.log(err.message);
         toast.error(err.response.data.error);
-        // setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchData();
+      })
+      .finally(() => setIsLoading(false));
   }, []);
-
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   fetch("https://rickandmortyapi.com/api/character")
-  //     .then((res) => {
-  //       if (!res.ok) throw new Error("Something went wrong !!");
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       setCharacters(data.results);
-  //       // setIsLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       // setIsLoading(false);
-  //       toast.error(err.message);
-  //     })
-  //     .finally(() => setIsLoading(false));
-  // }, []);
   // console.log(error);
   return (
     <div className="app">
