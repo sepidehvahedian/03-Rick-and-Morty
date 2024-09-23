@@ -9,11 +9,14 @@ function App() {
   const [characters, setCharacters] = useState(allCharacters);
 
   useEffect(() => {
-    fetch("https://rickandmortyapi.com/api/character")
-      .then((res) => res.json())
-      // .then((data) => console.log(data));
-      .then((data) => setCharacters(data.results.slice(0, 5)));
+    async function fetchData() {
+      const res = await fetch("https://rickandmortyapi.com/api/character");
+      const data = await res.json();
+      setCharacters(data.results);
+    }
+    fetchData();
   }, []);
+
   return (
     <div className="app">
       <Navbar>
