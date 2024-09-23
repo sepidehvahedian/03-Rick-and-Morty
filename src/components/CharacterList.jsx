@@ -2,7 +2,8 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
 import Loader from "./loader";
 
-function CharacterList({ characters, isLoading, error }) {
+// function CharacterList({ characters, isLoading, error }) {
+function CharacterList({ characters, isLoading }) {
   if (isLoading)
     return (
       <div className="characters-list">
@@ -10,13 +11,13 @@ function CharacterList({ characters, isLoading, error }) {
       </div>
     );
 
-  if (error) {
-    return (
-      <div className="characters-list">
-        <p style={{ color: "red" }}>Error: {error}</p>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="characters-list">
+  //       <p style={{ color: "red" }}>Error: {error}</p>
+  //     </div>
+  //   );
+  // }
   return (
     <div className="characters-list">
       {characters.map((item) => (

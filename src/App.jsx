@@ -4,11 +4,12 @@ import CharacterDetail from "./components/CharacterDetail";
 import Navbar, { SearchResult } from "./components/Navbar";
 import React, { useEffect, useState } from "react";
 import Loader from "./components/loader";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [characters, setCharacters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  // const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -22,7 +23,8 @@ function App() {
       } catch (err) {
         // setIsLoading(false);
         // console.log(err.message);
-        setError(err.message);
+        toast.error(err.message);
+        // setError(err.message);
       } finally {
         setIsLoading(false);
       }
@@ -42,12 +44,13 @@ function App() {
   console.log(error);
   return (
     <div className="app">
+      <Toaster />
       <Navbar>
         <SearchResult numOfResult={characters.length} />
       </Navbar>
       <Main>
         <CharacterList
-          error={error}
+          // error={error}
           characters={characters}
           isLoading={isLoading}
         />
