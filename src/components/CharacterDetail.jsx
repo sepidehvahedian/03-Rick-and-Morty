@@ -1,8 +1,48 @@
-import React from "react";
-import { character, episodes } from "../../data/data";
+import React, { useEffect, useState } from "react";
+import { episodes } from "../../data/data";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
+import Loader from "./loader";
+import toast from "react-hot-toast";
 
-function CharacterDetail() {
+function CharacterDetail({ selectedId }) {
+  const [character, setCharacter] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        // setCharacter(null);
+        const { data } = await axios.get(
+          `https://rickandmortyapi.com/api/character/${selectedId}`
+        );
+        setCharacter(data);
+      } catch (error) {
+        toast.error(error.response.data.error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    if (selectedId) fetchData();
+  }, [selectedId]);
+
+  if (isLoading) {
+    return (
+      <div style={{ flex: 1 }}>
+        <Loader />
+      </div>
+    );
+  }
+
+  if (!character || !selectedId) {
+    return (
+      <div style={{ flex: 1, color: "var(--slate-300)" }}>
+        Please select a character.
+      </div>
+    );
+  }
+
   return (
     <div style={{ flex: 1 }}>
       <div className="character-detail">

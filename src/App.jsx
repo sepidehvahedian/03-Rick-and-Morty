@@ -11,6 +11,7 @@ function App() {
   const [characters, setCharacters] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
   // const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -36,6 +37,11 @@ function App() {
     fetchData();
   }, [query]);
 
+  const handleSelectCharacter = (id) => {
+    setSelectedId((prevId) => (prevId === id ? null : id));
+  };
+
+  // console.log(selectedId);
   // useEffect(() => {
   //   setIsLoading(true);
   //   axios
@@ -90,8 +96,10 @@ function App() {
           // error={error}
           characters={characters}
           isLoading={isLoading}
+          onSelectCharacter={handleSelectCharacter}
+          selectedId={selectedId}
         />
-        <CharacterDetail />
+        <CharacterDetail selectedId={selectedId} />
       </Main>
     </div>
   );
