@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { episodes } from "../../data/data";
+// import { episodes } from "../../data/data";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import Loader from "./loader";
 import toast from "react-hot-toast";
 
-function CharacterDetail({ selectedId }) {
+function CharacterDetail({ selectedId, onAddFavourite, isAddToFaourite }) {
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [episodes, setEpisodes] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -17,7 +18,16 @@ function CharacterDetail({ selectedId }) {
         const { data } = await axios.get(
           `https://rickandmortyapi.com/api/character/${selectedId}`
         );
+
         setCharacter(data);
+
+        const episodesId = data.episode.map((e) => e.split("/").at(-1));
+        const { data: episodeData } = await axios.get(
+          `https://rickandmortyapi.com/api/episode/${episodesId}`
+        );
+
+        // بررسی می‌کنیم که آیا episodeData یک آرایه است یا یک شیء، و آن را تبدیل به آرایه می‌کنیم
+        setEpisodes([episodeData].flat().slice(0, 6));
       } catch (error) {
         toast.error(error.response.data.error);
       } finally {
@@ -26,7 +36,7 @@ function CharacterDetail({ selectedId }) {
     }
     if (selectedId) fetchData();
   }, [selectedId]);
-
+  console.log(episodes);
   if (isLoading) {
     return (
       <div style={{ flex: 1 }}>
@@ -68,7 +78,16 @@ function CharacterDetail({ selectedId }) {
             <p>{character.location.name}</p>
           </div>
           <div className="actions">
-            <button className="btn btn--primary">Add to Favourid</button>
+            {isAddToFaourite ? (
+              <p>Already Added To Favourites ✅</p>
+            ) : (
+              <button
+                onClick={() => onAddFavourite(character)}
+                className="btn btn--primary"
+              >
+                Add to Favourid
+              </button>
+            )}
           </div>
         </div>
       </div>

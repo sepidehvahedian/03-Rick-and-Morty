@@ -1,7 +1,7 @@
 import "./App.css";
 import CharacterList from "./components/CharacterList";
 import CharacterDetail from "./components/CharacterDetail";
-import Navbar, { SearchResult, Search } from "./components/Navbar";
+import Navbar, { SearchResult, Search, Favourites } from "./components/Navbar";
 import React, { useEffect, useState } from "react";
 import Loader from "./components/loader";
 import toast, { Toaster } from "react-hot-toast";
@@ -12,7 +12,16 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const [favourites, setFavourites] = useState([]);
+  const [count, setCount] = useState(0);
   // const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => setCount((c) => c + 1), 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [count]);
 
   useEffect(() => {
     async function fetchData() {
@@ -40,6 +49,12 @@ function App() {
   const handleSelectCharacter = (id) => {
     setSelectedId((prevId) => (prevId === id ? null : id));
   };
+
+  const handleAddFavourite = (char) => {
+    setFavourites((preFav) => [...preFav, char]);
+  };
+
+  const isAddToFaourite = favourites.map((fav) => fav.id).includes(selectedId);
 
   // console.log(selectedId);
   // useEffect(() => {
@@ -86,10 +101,12 @@ function App() {
 
   return (
     <div className="app">
+      <div style={{ color: "#fff" }}>{count}</div>
       <Toaster />
       <Navbar>
         <Search query={query} setQuery={setQuery} />
         <SearchResult numOfResult={characters.length} />
+        <Favourites numOfFavourites={favourites.length} />
       </Navbar>
       <Main>
         <CharacterList
@@ -99,7 +116,11 @@ function App() {
           onSelectCharacter={handleSelectCharacter}
           selectedId={selectedId}
         />
-        <CharacterDetail selectedId={selectedId} />
+        <CharacterDetail
+          selectedId={selectedId}
+          onAddFavourite={handleAddFavourite}
+          isAddToFaourite={isAddToFaourite}
+        />
       </Main>
     </div>
   );
